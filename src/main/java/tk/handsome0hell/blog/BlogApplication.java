@@ -7,7 +7,10 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.context.annotation.Bean;
 
+import org.springframework.context.annotation.ImportResource;
+
 @SpringBootApplication
+@ImportResource(value={"classpath:applicationBeans.xml"})
 public class BlogApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(BlogApplication.class, args);
