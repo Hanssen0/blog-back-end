@@ -15,9 +15,9 @@ import tk.handsome0hell.blog.articles.ArticlesComponent;
 public class ArticlesController {
   @Autowired
   private ArticlesComponent articles_component;
-  @GetMapping("")
-  public Article GetArticle() {
-    return articles_component.GetArticleById(0);
+  @GetMapping("{id}")
+  public Article GetArticle(@PathVariable("id") Integer id) {
+    return articles_component.GetArticleById(id);
   }
   @PutMapping("{id}")
   public void PutArticle(@PathVariable("id") Integer id, @RequestBody Article article) {
