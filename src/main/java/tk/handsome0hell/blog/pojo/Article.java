@@ -19,6 +19,13 @@ public class Article {
     this.author = author;
     this.publish_date = publish_date;
   }
+  public void CopyFrom(Article article) {
+    if (article.title != null) title = article.title;
+    if (article.subtitle != null) subtitle = article.subtitle;
+    if (article.content != null) content = article.content;
+    if (article.author != null) author = article.author;
+    if (article.publish_date != null) publish_date = article.publish_date;
+  }
   public void setId(Integer id) {this.id = id;}
   public Integer getId() {return id;}
   public String getTitle() {return title;}
