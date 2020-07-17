@@ -1,6 +1,7 @@
 package tk.handsome0hell.blog.pojo;
 
 public class Article {
+  private Integer id;
   private String title;
   private String subtitle;
   private String content;
@@ -18,6 +19,8 @@ public class Article {
     this.author = author;
     this.publish_date = publish_date;
   }
+  public void setId(Integer id) {this.id = id;}
+  public Integer getId() {return id;}
   public String getTitle() {return title;}
   public String getSubtitle() {return subtitle;}
   public String getContent() {return content;}
