@@ -1,5 +1,7 @@
 package tk.handsome0hell.blog.articles;
 
+import java.util.List;
+import java.util.LinkedList;
 import java.util.Map;
 import java.util.HashMap;
 import tk.handsome0hell.blog.pojo.Article;
@@ -21,5 +23,9 @@ class MemoryArticlesComponent implements ArticlesComponent {
   @Override
   public void UpdateArticle(Article article) {
     memory_articles.get(article.getId()).CopyFrom(article);
+  }
+  @Override
+  public List<Article> GetArticles() {
+    return new LinkedList<Article>(memory_articles.values());
   }
 };
