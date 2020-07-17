@@ -1,5 +1,6 @@
 package tk.handsome0hell.blog.web;
 
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -10,14 +11,15 @@ import tk.handsome0hell.blog.pojo.Article;
 import tk.handsome0hell.blog.articles.ArticlesComponent;
 
 @RestController
+@RequestMapping("/articles")
 public class ArticlesController {
   @Autowired
   private ArticlesComponent articles_component;
-  @GetMapping("/article")
+  @GetMapping("")
   public Article GetArticle() {
     return articles_component.GetArticleById(0);
   }
-  @PutMapping("/article/{id}")
+  @PutMapping("{id}")
   public void PutArticle(@PathVariable("id") Integer id, @RequestBody Article article) {
     article.setId(id);
     articles_component.UpdateArticle(article);
