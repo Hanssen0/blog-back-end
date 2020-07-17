@@ -7,6 +7,6 @@
         http://www.springframework.org/schema/context
         http://www.springframework.org/schema/context/spring-context.xsd">
 
-	<bean id="ConstantArticlesComponent" class="tk.handsome0hell.blog.articles.ConstantArticlesComponent"></bean>
+	<bean id="MemoryArticlesComponent" class="tk.handsome0hell.blog.articles.MemoryArticlesComponent"></bean>
 
 </beans>
