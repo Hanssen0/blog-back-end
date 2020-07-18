@@ -8,5 +8,6 @@
         http://www.springframework.org/schema/context/spring-context.xsd">
 
 	<bean id="MemoryArticlesComponent" class="tk.handsome0hell.blog.articles.MemoryArticlesComponent"></bean>
+	<bean id="MemoryUsersComponent" class="tk.handsome0hell.blog.security.MemoryUsersComponent"></bean>
 
 </beans>
