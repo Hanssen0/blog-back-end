@@ -12,9 +12,9 @@ import org.springframework.context.annotation.ImportResource;
 @SpringBootApplication
 @ImportResource(value={"classpath:applicationBeans.xml"})
 public class BlogApplication {
-	public static void main(String[] args) {
-		SpringApplication.run(BlogApplication.class, args);
-	}
+  public static void main(String[] args) {
+    SpringApplication.run(BlogApplication.class, args);
+  }
   @Bean
   public WebMvcConfigurer corsConfigurer() {
     return new WebMvcConfigurer() {
