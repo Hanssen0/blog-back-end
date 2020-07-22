@@ -13,7 +13,7 @@ import tk.handsome0hell.blog.articles.ArticlesComponent;
 
 @RestController
 @RequestMapping("/articles")
-public class ArticlesController {
+public class ArticlesPresenter {
   @Autowired
   private ArticlesComponent articles_component;
   @GetMapping("")

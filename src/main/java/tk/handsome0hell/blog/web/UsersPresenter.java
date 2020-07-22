@@ -12,7 +12,7 @@ import tk.handsome0hell.blog.security.UsersComponent;
 
 @RestController
 @RequestMapping("/users")
-public class UsersController {
+public class UsersPresenter {
   @Autowired
   private UsersComponent users_component;
   @GetMapping("login")
