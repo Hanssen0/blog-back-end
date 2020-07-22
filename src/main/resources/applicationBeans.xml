@@ -4,7 +4,7 @@
   xsi:schemaLocation="http://www.springframework.org/schema/beans
                       http://www.springframework.org/schema/beans/spring-beans.xsd">
 
-  <bean class="tk.handsome0hell.blog.articles.MemoryArticlesComponent"></bean>
+  <bean class="tk.handsome0hell.blog.articles.DatabaseArticlesComponent"></bean>
 
   <bean class="org.mybatis.spring.mapper.MapperFactoryBean">
     <property name="mapperInterface" value="tk.handsome0hell.blog.articles.ArticlesRepository" />
