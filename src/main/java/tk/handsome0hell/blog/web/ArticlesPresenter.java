@@ -7,15 +7,16 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.beans.factory.annotation.Autowired;
 import tk.handsome0hell.blog.pojo.Article;
 import tk.handsome0hell.blog.articles.ArticlesComponent;
 
 @RestController
 @RequestMapping("/articles")
 public class ArticlesPresenter {
-  @Autowired
   private ArticlesComponent articles_component;
+  public ArticlesPresenter(ArticlesComponent articles_component) {
+    this.articles_component = articles_component;
+  }
   @GetMapping("")
   public List<Article> GetArticles() {
     return articles_component.GetArticles();

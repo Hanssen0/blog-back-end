@@ -6,15 +6,16 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.beans.factory.annotation.Autowired;
 import tk.handsome0hell.blog.pojo.User;
 import tk.handsome0hell.blog.security.UsersComponent;
 
 @RestController
 @RequestMapping("/users")
 public class UsersPresenter {
-  @Autowired
   private UsersComponent users_component;
+  public UsersPresenter(UsersComponent users_component) {
+    this.users_component = users_component;
+  }
   @GetMapping("login")
   public Boolean IsLogin() {
     return users_component.IsLogined();
