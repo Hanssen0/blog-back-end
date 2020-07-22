@@ -5,6 +5,6 @@
         http://www.springframework.org/schema/beans/spring-beans.xsd">
 
 	<bean class="tk.handsome0hell.blog.articles.MemoryArticlesComponent"></bean>
-	<bean class="tk.handsome0hell.blog.security.MemoryUsersComponent"></bean>
+	<bean class="tk.handsome0hell.blog.security.DatabaseUsersComponent"></bean>
 
 </beans>
