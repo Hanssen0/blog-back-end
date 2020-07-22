@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="tk.handsome0hell.blog.articles.ArticlesRepository" >
+  <select id="GetArticles" resultType="tk.handsome0hell.blog.pojo.Article">
+    SELECT * FROM articles
+  </select>
+  <select id="GetArticleById" resultType="tk.handsome0hell.blog.pojo.Article">
+    SELECT * FROM articles WHERE id = #{id}
+  </select>
+  <update id="UpdateArticle">
+    UPDATE articles
+    <set>
+      <if test="title != null">title = #{title},</if>
+      <if test="subtitle != null">subtitle = #{title},</if>
+      <if test="content  != null">content = #{content},</if>
+      <if test="author != null">author = #{author},</if>
+      <if test="publish_time != null">publish_time = #{publish_time},</if>
+    </set>
+    WHERE id = #{id}
+  </update>
+</mapper>

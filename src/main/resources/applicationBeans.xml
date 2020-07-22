@@ -5,6 +5,12 @@
                       http://www.springframework.org/schema/beans/spring-beans.xsd">
 
   <bean class="tk.handsome0hell.blog.articles.MemoryArticlesComponent"></bean>
+
+  <bean class="org.mybatis.spring.mapper.MapperFactoryBean">
+    <property name="mapperInterface" value="tk.handsome0hell.blog.articles.ArticlesRepository" />
+    <property name="sqlSessionFactory" ref="sqlSessionFactory" />
+  </bean>
+
   <bean class="tk.handsome0hell.blog.security.DatabaseUsersComponent"></bean>
 
   <bean class="org.mybatis.spring.mapper.MapperFactoryBean">
