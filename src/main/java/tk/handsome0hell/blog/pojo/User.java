@@ -10,6 +10,6 @@ public class User {
   }
   public void setId(Integer id) {this.id = id;}
   public Integer getId() {return id;}
-  public String getUsername() {return this.username;}
-  public String getPassword() {return this.password;}
+  public String getUsername() {return username;}
+  public String getPassword() {return password;}
 }
