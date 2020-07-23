@@ -12,4 +12,11 @@
           password = #{password} LIMIT 1
     )
   </select>
+  <select id="GetUsers" resultType="tk.handsome0hell.blog.pojo.User">
+    SELECT
+      id,
+      username,
+      password
+    FROM accounts
+  </select>
 </mapper>
