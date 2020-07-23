@@ -4,11 +4,23 @@
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 
 <mapper namespace="tk.handsome0hell.blog.articles.ArticlesRepository" >
+  <sql id="Columns">
+    ${prefix}id,
+    ${prefix}title,
+    ${prefix}subtitle,
+    ${prefix}content,
+    ${prefix}author,
+    ${prefix}publish_time
+  </sql>
   <select id="GetArticles" resultType="tk.handsome0hell.blog.pojo.Article">
-    SELECT * FROM articles
+    SELECT
+      <include refid="Columns"><property name="prefix" value=""/></include>
+    FROM articles
   </select>
   <select id="GetArticleById" resultType="tk.handsome0hell.blog.pojo.Article">
-    SELECT * FROM articles WHERE id = #{id}
+    SELECT
+      <include refid="Columns"><property name="prefix" value=""/></include>
+    FROM articles WHERE id = #{id}
   </select>
   <update id="UpdateArticle">
     UPDATE articles
