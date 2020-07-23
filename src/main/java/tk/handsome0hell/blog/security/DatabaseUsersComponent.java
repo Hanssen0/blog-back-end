@@ -1,6 +1,7 @@
 package tk.handsome0hell.blog.security;
 
 import tk.handsome0hell.blog.pojo.User;
+import java.util.List;
 
 class DatabaseUsersComponent implements UsersComponent {
   private Boolean is_logined;
@@ -23,4 +24,8 @@ class DatabaseUsersComponent implements UsersComponent {
     is_logined = false;
     return true;
   };
+  @Override
+  public List<User> GetUsers() {
+    return users_repository.GetUsers();
+  }
 };
