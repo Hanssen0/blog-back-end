@@ -12,11 +12,12 @@ import java.util.List;
 import java.util.LinkedList;
 
 class UserWithoutPassword {
-  private String username;
+  private User user;
   public UserWithoutPassword(User user) {
-    this.username = user.getUsername();
+    this.user = user;
   }
-  public String getUsername() {return username;}
+  public Integer getId() {return user.getId();}
+  public String getUsername() {return user.getUsername();}
 };
 
 @RestController
