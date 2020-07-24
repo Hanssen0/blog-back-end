@@ -59,4 +59,10 @@ public class UsersPresenter {
   public Boolean DeleteUserById(@PathVariable("id") Integer id) {
     return users_component.DeleteUserById(id);
   };
+  @PutMapping("{id}")
+  public Boolean UpdateUser(@PathVariable("id") Integer id,
+                         @RequestBody User user) {
+    user.setId(id);
+    return users_component.UpdateUser(user);
+  };
 }
