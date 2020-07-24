@@ -7,4 +7,12 @@ class UserIdLoginComponent implements LoginComponent {
   public Boolean HasLogined(UserIdRepository repository) {
     return (repository.getUserId() != null);
   }
+  @Override
+  public void Login(UserIdRepository repository, User user) {
+    repository.setUserId(user.getId());
+  }
+  @Override
+  public void Logout(UserIdRepository repository) {
+    repository.setUserId(null);
+  }
 };

@@ -35,13 +35,13 @@ public class LoginPresenter {
     User matched_user = users_component.GetUserByUsernameAndPassword(user);
     if (matched_user == null) return false;
     UserIdRepository user_id_repository = new SessionUserIdRepository(session);
-    user_id_repository.setUserId(matched_user.getId());
+    login_component.Login(user_id_repository, matched_user);
     return true;
   };
   @DeleteMapping("")
   public Boolean Logout(HttpSession session) {
     UserIdRepository user_id_repository = new SessionUserIdRepository(session);
-    user_id_repository.setUserId(null);
+    login_component.Logout(user_id_repository);
     return true;
   };
 }
