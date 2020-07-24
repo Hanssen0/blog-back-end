@@ -1,4 +1,4 @@
-package tk.handsome0hell.blog.user;
+package tk.handsome0hell.blog.users;
 
 import tk.handsome0hell.blog.pojo.User;
 import java.util.List;

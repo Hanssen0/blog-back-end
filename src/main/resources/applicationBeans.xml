@@ -11,10 +11,10 @@
     <property name="sqlSessionFactory" ref="sqlSessionFactory" />
   </bean>
 
-  <bean class="tk.handsome0hell.blog.user.DatabaseUsersComponent"></bean>
+  <bean class="tk.handsome0hell.blog.users.DatabaseUsersComponent"></bean>
 
   <bean class="org.mybatis.spring.mapper.MapperFactoryBean">
-    <property name="mapperInterface" value="tk.handsome0hell.blog.user.UsersRepository" />
+    <property name="mapperInterface" value="tk.handsome0hell.blog.users.UsersRepository" />
     <property name="sqlSessionFactory" ref="sqlSessionFactory" />
   </bean>
 

@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import tk.handsome0hell.blog.pojo.User;
-import tk.handsome0hell.blog.user.UsersComponent;
+import tk.handsome0hell.blog.users.UsersComponent;
 import tk.handsome0hell.blog.permission.UserIdRepository;
 import tk.handsome0hell.blog.permission.SessionUserIdRepository;
 import tk.handsome0hell.blog.permission.LoginComponent;
