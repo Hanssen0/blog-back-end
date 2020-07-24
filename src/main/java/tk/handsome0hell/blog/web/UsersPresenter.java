@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import tk.handsome0hell.blog.pojo.User;
@@ -53,5 +54,9 @@ public class UsersPresenter {
   @PostMapping("")
   public Boolean AddUser(@RequestBody User user) {
     return users_component.AddUser(user);
+  };
+  @DeleteMapping("{id}")
+  public Boolean DeleteUserById(@PathVariable("id") Integer id) {
+    return users_component.DeleteUserById(id);
   };
 }
