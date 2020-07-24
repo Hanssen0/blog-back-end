@@ -28,4 +28,9 @@ class DatabaseUsersComponent implements UsersComponent {
   public List<User> GetUsers() {
     return users_repository.GetUsers();
   }
+  @Override
+  public Boolean AddUser(User user) {
+    Integer number_of_new_rows = users_repository.AddUser(user);
+    return (number_of_new_rows == 1);
+  }
 };

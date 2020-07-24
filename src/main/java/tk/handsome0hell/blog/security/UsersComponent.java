@@ -8,4 +8,5 @@ public interface UsersComponent {
   Boolean Login(User user);
   Boolean Logout();
   List<User> GetUsers();
+  Boolean AddUser(User user);
 };
