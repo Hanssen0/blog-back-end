@@ -18,6 +18,6 @@
     <property name="sqlSessionFactory" ref="sqlSessionFactory" />
   </bean>
 
-  <bean class="tk.handsome0hell.blog.permission.DatabasePermissionComponent"></bean>
+  <bean class="tk.handsome0hell.blog.permission.UserIdLoginComponent"></bean>
 
 </beans>

@@ -11,24 +11,24 @@ import tk.handsome0hell.blog.pojo.User;
 import tk.handsome0hell.blog.user.UsersComponent;
 import tk.handsome0hell.blog.permission.UserIdRepository;
 import tk.handsome0hell.blog.permission.SessionUserIdRepository;
-import tk.handsome0hell.blog.permission.PermissionComponent;
+import tk.handsome0hell.blog.permission.LoginComponent;
 import javax.servlet.http.HttpSession;
 
 @RestController
 @RequestMapping("/login")
 public class LoginPresenter {
   private UsersComponent users_component;
-  private PermissionComponent permission_component;
+  private LoginComponent login_component;
   public LoginPresenter(
       UsersComponent users_component,
-      PermissionComponent permission_component) {
+      LoginComponent login_component) {
     this.users_component = users_component;
-    this.permission_component = permission_component;
+    this.login_component = login_component;
   }
   @GetMapping("")
   public Boolean IsLogin(HttpSession session) {
     UserIdRepository user_id_repository = new SessionUserIdRepository(session);
-    return permission_component.HasLogined(user_id_repository);
+    return login_component.HasLogined(user_id_repository);
   };
   @PutMapping("")
   public Boolean Login(@RequestBody User user, HttpSession session) {
