@@ -1,4 +1,4 @@
-package tk.handsome0hell.blog.user;
+package tk.handsome0hell.blog.permission;
 
 import javax.servlet.http.HttpSession;
 
