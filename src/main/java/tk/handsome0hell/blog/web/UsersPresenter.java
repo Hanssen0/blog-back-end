@@ -38,8 +38,9 @@ public class UsersPresenter {
     this.permission_component = permission_component;
   }
   @GetMapping("login")
-  public Boolean IsLogin() {
-    return users_component.IsLogined();
+  public Boolean IsLogin(HttpSession session) {
+    UserIdRepository user_id_repository = new SessionUserIdRepository(session);
+    return permission_component.HasLogined(user_id_repository);
   };
   @PutMapping("login")
   public Boolean Login(@RequestBody User user, HttpSession session) {
