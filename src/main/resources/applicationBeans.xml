@@ -18,13 +18,15 @@
     <property name="sqlSessionFactory" ref="sqlSessionFactory" />
   </bean>
 
-  <bean class="tk.handsome0hell.blog.permission.UserIdLoginComponent"></bean>
-  <bean class="tk.handsome0hell.blog.permission.DatabasePermissionComponent"></bean>
+  <bean class="tk.handsome0hell.blog.roles.DatabaseRolesComponent"></bean>
 
   <bean class="org.mybatis.spring.mapper.MapperFactoryBean">
-    <property name="mapperInterface" value="tk.handsome0hell.blog.permission.PermissionManagementRepository" />
+    <property name="mapperInterface" value="tk.handsome0hell.blog.roles.RolesRepository" />
     <property name="sqlSessionFactory" ref="sqlSessionFactory" />
   </bean>
+
+  <bean class="tk.handsome0hell.blog.permission.UserIdLoginComponent"></bean>
+  <bean class="tk.handsome0hell.blog.permission.DatabasePermissionComponent"></bean>
 
   <bean class="org.mybatis.spring.mapper.MapperFactoryBean">
     <property name="mapperInterface" value="tk.handsome0hell.blog.permission.PermissionVerificationRepository" />

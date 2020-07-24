@@ -9,27 +9,26 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import tk.handsome0hell.blog.pojo.Role;
 import tk.handsome0hell.blog.pojo.Permission;
-import tk.handsome0hell.blog.permission.PermissionManagementComponent;
+import tk.handsome0hell.blog.roles.RolesComponent;
 import java.util.List;
 
 @RestController
 @RequestMapping("/roles")
 public class RolesPresenter {
-  private PermissionManagementComponent permission_management_component;
-  public RolesPresenter(
-      PermissionManagementComponent permission_management_component) {
-    this.permission_management_component = permission_management_component;
+  private RolesComponent roles_component;
+  public RolesPresenter(RolesComponent roles_component) {
+    this.roles_component = roles_component;
   }
   @GetMapping("")
   public List<Role> GetRoles() {
-    return permission_management_component.GetRoles();
+    return roles_component.GetRoles();
   }
   @GetMapping("{id}")
   public List<Permission> GetPermissionsOfRole(
       @PathVariable("id") Integer role_id) {
     Role role = new Role();
     role.setId(role_id);
-    return permission_management_component.GetPermissionsOfRole(role);
+    return roles_component.GetPermissionsOfRole(role);
   }
   @PostMapping("{id}")
   Boolean AddPermissionToRole(
@@ -37,8 +36,7 @@ public class RolesPresenter {
       @RequestBody Permission permission) {
     Role role = new Role();
     role.setId(role_id);
-    return permission_management_component
-      .AddPermissionToRole(permission, role);
+    return roles_component.AddPermissionToRole(permission, role);
   }
   @DeleteMapping("{role_id}/{permission_id}")
   Boolean DeletePermissionFromRole(
@@ -48,7 +46,6 @@ public class RolesPresenter {
     role.setId(role_id);
     Permission permission = new Permission();
     permission.setId(permission_id);
-    return permission_management_component
-      .DeletePermissionFromRole(permission, role);
+    return roles_component.DeletePermissionFromRole(permission, role);
   }
 }
