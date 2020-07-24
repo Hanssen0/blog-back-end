@@ -10,6 +10,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import tk.handsome0hell.blog.pojo.User;
 import tk.handsome0hell.blog.user.UsersComponent;
+import tk.handsome0hell.blog.pojo.PermissionsType;
+import tk.handsome0hell.blog.permission.UserIdRepository;
+import tk.handsome0hell.blog.permission.SessionUserIdRepository;
+import tk.handsome0hell.blog.permission.LoginComponent;
+import tk.handsome0hell.blog.permission.PermissionVerificationComponent;
+import javax.servlet.http.HttpSession;
 import java.util.List;
 import java.util.LinkedList;
 
@@ -27,8 +33,15 @@ class UserWithoutPassword {
 @RequestMapping("/users")
 public class UsersPresenter {
   private UsersComponent users_component;
-  public UsersPresenter(UsersComponent users_component) {
+  private LoginComponent login_component;
+  private PermissionVerificationComponent permission_component;
+  public UsersPresenter(
+      UsersComponent users_component,
+      LoginComponent login_component,
+      PermissionVerificationComponent permission_component) {
     this.users_component = users_component;
+    this.login_component = login_component;
+    this.permission_component = permission_component;
   }
   @GetMapping("")
   public List<UserWithoutPassword> GetUsers() {
@@ -41,7 +54,13 @@ public class UsersPresenter {
     return response_users;
   };
   @PostMapping("")
-  public Boolean AddUser(@RequestBody User user) {
+  public Boolean AddUser(@RequestBody User user, HttpSession session) {
+    UserIdRepository repository = new SessionUserIdRepository(session);
+    if (!login_component.HasLogined(repository)) return false;
+    if (!(permission_component
+        .HasPermission(repository, PermissionsType.kAddUser))) {
+      return false;
+    }
     return users_component.AddUser(user);
   };
   @DeleteMapping("{id}")
