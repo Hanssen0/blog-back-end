@@ -9,4 +9,5 @@ public interface UsersComponent {
   Boolean Logout();
   List<User> GetUsers();
   Boolean AddUser(User user);
+  Boolean DeleteUserById(Integer id);
 };

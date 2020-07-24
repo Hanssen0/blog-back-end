@@ -33,4 +33,9 @@ class DatabaseUsersComponent implements UsersComponent {
     Integer number_of_new_rows = users_repository.AddUser(user);
     return (number_of_new_rows == 1);
   }
+  @Override
+  public Boolean DeleteUserById(Integer id) {
+    Integer number_of_deleted_rows = users_repository.DeleteUserById(id);
+    return (number_of_deleted_rows == 1);
+  }
 };
