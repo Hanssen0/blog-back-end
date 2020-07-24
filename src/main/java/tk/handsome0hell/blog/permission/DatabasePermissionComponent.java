@@ -40,4 +40,8 @@ class DatabasePermissionComponent
     return permission_verification_repository
       .IsUserHasPermission(repository.getUserId(), permission.getId());
   }
+  @Override
+  public Boolean HasLogined(UserIdRepository repository) {
+    return (repository.getUserId() != null);
+  }
 }

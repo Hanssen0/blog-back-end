@@ -12,6 +12,7 @@ import tk.handsome0hell.blog.user.UsersComponent;
 import tk.handsome0hell.blog.permission.UserIdRepository;
 import tk.handsome0hell.blog.permission.SessionUserIdRepository;
 import tk.handsome0hell.blog.permission.LoginComponent;
+import tk.handsome0hell.blog.permission.PermissionVerificationComponent;
 import javax.servlet.http.HttpSession;
 
 @RestController
@@ -19,16 +20,19 @@ import javax.servlet.http.HttpSession;
 public class LoginPresenter {
   private UsersComponent users_component;
   private LoginComponent login_component;
+  private PermissionVerificationComponent permission_component;
   public LoginPresenter(
       UsersComponent users_component,
-      LoginComponent login_component) {
+      LoginComponent login_component,
+      PermissionVerificationComponent permission_component) {
     this.users_component = users_component;
     this.login_component = login_component;
+    this.permission_component = permission_component;
   }
   @GetMapping("")
   public Boolean IsLogin(HttpSession session) {
     UserIdRepository user_id_repository = new SessionUserIdRepository(session);
-    return login_component.HasLogined(user_id_repository);
+    return permission_component.HasLogined(user_id_repository);
   };
   @PutMapping("")
   public Boolean Login(@RequestBody User user, HttpSession session) {
