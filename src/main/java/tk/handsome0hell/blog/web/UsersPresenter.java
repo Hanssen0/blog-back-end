@@ -10,10 +10,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import tk.handsome0hell.blog.pojo.User;
 import tk.handsome0hell.blog.user.UsersComponent;
-import tk.handsome0hell.blog.permission.UserIdRepository;
-import tk.handsome0hell.blog.permission.SessionUserIdRepository;
-import tk.handsome0hell.blog.permission.PermissionComponent;
-import javax.servlet.http.HttpSession;
 import java.util.List;
 import java.util.LinkedList;
 
@@ -30,32 +26,9 @@ class UserWithoutPassword {
 @RequestMapping("/users")
 public class UsersPresenter {
   private UsersComponent users_component;
-  private PermissionComponent permission_component;
-  public UsersPresenter(
-      UsersComponent users_component,
-      PermissionComponent permission_component) {
+  public UsersPresenter(UsersComponent users_component) {
     this.users_component = users_component;
-    this.permission_component = permission_component;
   }
-  @GetMapping("login")
-  public Boolean IsLogin(HttpSession session) {
-    UserIdRepository user_id_repository = new SessionUserIdRepository(session);
-    return permission_component.HasLogined(user_id_repository);
-  };
-  @PutMapping("login")
-  public Boolean Login(@RequestBody User user, HttpSession session) {
-    User matched_user = users_component.Login(user);
-    if (matched_user == null) return false;
-    UserIdRepository user_id_repository = new SessionUserIdRepository(session);
-    user_id_repository.setUserId(matched_user.getId());
-    return true;
-  };
-  @DeleteMapping("login")
-  public Boolean Logout(HttpSession session) {
-    UserIdRepository user_id_repository = new SessionUserIdRepository(session);
-    user_id_repository.setUserId(null);
-    return true;
-  };
   @GetMapping("")
   public List<UserWithoutPassword> GetUsers() {
     List<UserWithoutPassword> response_users =
