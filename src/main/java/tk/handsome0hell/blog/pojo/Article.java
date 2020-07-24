@@ -8,25 +8,14 @@ public class Article {
   private String author;
   private Long publish_time;
   public Article() {}
-  public Article(String title,
-                 String subtitle,
-                 String content,
-                 String author,
-                 Long publish_time) {
-    this.title = title;
-    this.subtitle = subtitle;
-    this.content = content;
-    this.author = author;
+  public void setId(Integer id) {this.id = id;}
+  public void setTitle(String title) {this.title = title;}
+  public void setSubtitle(String subtitle) {this.subtitle = subtitle;}
+  public void setContent(String content) {this.content = content;}
+  public void setAuthor(String author) {this.author = author;}
+  public void setPublish_time(Long publish_time) {
     this.publish_time = publish_time;
   }
-  public void CopyFrom(Article article) {
-    if (article.title != null) title = article.title;
-    if (article.subtitle != null) subtitle = article.subtitle;
-    if (article.content != null) content = article.content;
-    if (article.author != null) author = article.author;
-    if (article.publish_time != null) publish_time = article.publish_time;
-  }
-  public void setId(Integer id) {this.id = id;}
   public Integer getId() {return id;}
   public String getTitle() {return title;}
   public String getSubtitle() {return subtitle;}
