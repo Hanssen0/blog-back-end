@@ -7,4 +7,5 @@ interface UsersRepository {
   Boolean ValidateUser(User user);
   List<User> GetUsers();
   Integer AddUser(User user);
+  Integer DeleteUserById(Integer id);
 };

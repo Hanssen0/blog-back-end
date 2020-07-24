@@ -25,4 +25,9 @@
     VALUES
       (#{username}, #{password})
   </insert>
+  <delete id="DeleteUserById">
+    DELETE FROM accounts
+    WHERE
+      id = #{id}
+  </delete>
 </mapper>
