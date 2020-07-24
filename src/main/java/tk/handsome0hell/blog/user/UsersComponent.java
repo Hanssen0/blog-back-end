@@ -4,7 +4,7 @@ import tk.handsome0hell.blog.pojo.User;
 import java.util.List;
 
 public interface UsersComponent {
-  User Login(User user);
+  User GetUserByUsernameAndPassword(User user);
   List<User> GetUsers();
   Boolean AddUser(User user);
   Boolean DeleteUserById(Integer id);

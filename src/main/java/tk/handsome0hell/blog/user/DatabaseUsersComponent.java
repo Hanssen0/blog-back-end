@@ -9,8 +9,8 @@ class DatabaseUsersComponent implements UsersComponent {
     this.users_repository = users_repository;
   };
   @Override
-  public User Login(User user) {
-    return users_repository.ValidateUser(user);
+  public User GetUserByUsernameAndPassword(User user) {
+    return users_repository.GetUserByUsernameAndPassword(user);
   };
   @Override
   public List<User> GetUsers() {

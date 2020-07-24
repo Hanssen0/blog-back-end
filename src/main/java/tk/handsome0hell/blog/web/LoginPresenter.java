@@ -32,7 +32,7 @@ public class LoginPresenter {
   };
   @PutMapping("")
   public Boolean Login(@RequestBody User user, HttpSession session) {
-    User matched_user = users_component.Login(user);
+    User matched_user = users_component.GetUserByUsernameAndPassword(user);
     if (matched_user == null) return false;
     UserIdRepository user_id_repository = new SessionUserIdRepository(session);
     user_id_repository.setUserId(matched_user.getId());
