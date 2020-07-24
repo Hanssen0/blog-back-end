@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="tk.handsome0hell.blog.permission.PermissionManagementRepository">
+  <select id="GetRoles" resultType="tk.handsome0hell.blog.pojo.Role">
+    SELECT
+      id,
+      name
+    FROM roles
+  </select>
+  <select id="GetPermissionsOfRole" resultType="tk.handsome0hell.blog.pojo.Permission">
+    SELECT
+      permission as id
+    FROM permissions
+      WHERE
+        role_id = #{id}
+  </select>
+  <insert id="InsertPermissionRoleRelationship">
+    INSERT INTO permissions
+      (role_id, permission)
+    VALUES
+      (#{role.id}, #{permission.id})
+  </insert>
+  <delete id="DeletePermissionRoleRelationship">
+    DELETE FROM permissions
+    WHERE
+      role_id = #{role.id} AND
+      permission = #{permission.id}
+  </delete>
+</mapper>
