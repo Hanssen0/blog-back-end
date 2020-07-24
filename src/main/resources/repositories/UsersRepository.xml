@@ -30,4 +30,12 @@
     WHERE
       id = #{id}
   </delete>
+  <update id="UpdateUser">
+    UPDATE accounts
+    <set>
+      <if test="username != null">username = #{username},</if>
+      <if test="password != null">password = #{password},</if>
+    </set>
+    WHERE id = #{id}
+  </update>
 </mapper>

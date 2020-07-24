@@ -8,4 +8,5 @@ interface UsersRepository {
   List<User> GetUsers();
   Integer AddUser(User user);
   Integer DeleteUserById(Integer id);
+  Integer UpdateUser(User user);
 };
