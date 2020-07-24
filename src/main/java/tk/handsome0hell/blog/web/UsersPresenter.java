@@ -10,6 +10,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import tk.handsome0hell.blog.pojo.User;
 import tk.handsome0hell.blog.security.UsersComponent;
+import tk.handsome0hell.blog.security.UserIdRepository;
+import tk.handsome0hell.blog.security.SessionUserIdRepository;
+import javax.servlet.http.HttpSession;
 import java.util.List;
 import java.util.LinkedList;
 
@@ -34,9 +37,12 @@ public class UsersPresenter {
     return users_component.IsLogined();
   };
   @PutMapping("login")
-  public Boolean Login(@RequestBody User user) {
+  public Boolean Login(@RequestBody User user, HttpSession session) {
     User matched_user = users_component.Login(user);
-    return (matched_user != null);
+    if (matched_user == null) return false;
+    UserIdRepository user_id_repository = new SessionUserIdRepository(session);
+    user_id_repository.setUserId(matched_user.getId());
+    return true;
   };
   @DeleteMapping("login")
   public Boolean Logout() {
