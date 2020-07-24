@@ -35,7 +35,8 @@ public class UsersPresenter {
   };
   @PutMapping("login")
   public Boolean Login(@RequestBody User user) {
-    return users_component.Login(user);
+    User matched_user = users_component.Login(user);
+    return (matched_user != null);
   };
   @DeleteMapping("login")
   public Boolean Logout() {

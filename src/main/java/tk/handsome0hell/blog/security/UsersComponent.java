@@ -5,7 +5,7 @@ import java.util.List;
 
 public interface UsersComponent {
   Boolean IsLogined();
-  Boolean Login(User user);
+  User Login(User user);
   Boolean Logout();
   List<User> GetUsers();
   Boolean AddUser(User user);

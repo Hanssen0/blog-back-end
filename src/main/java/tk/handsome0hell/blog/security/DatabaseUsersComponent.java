@@ -15,9 +15,10 @@ class DatabaseUsersComponent implements UsersComponent {
     return is_logined;
   };
   @Override
-  public Boolean Login(User user) {
-    is_logined = users_repository.ValidateUser(user); 
-    return is_logined;
+  public User Login(User user) {
+    User result = users_repository.ValidateUser(user);
+    is_logined = result != null;
+    return result;
   };
   @Override
   public Boolean Logout() {
