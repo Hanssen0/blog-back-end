@@ -4,26 +4,13 @@ import tk.handsome0hell.blog.pojo.User;
 import java.util.List;
 
 class DatabaseUsersComponent implements UsersComponent {
-  private Boolean is_logined;
   private UsersRepository users_repository;
   public DatabaseUsersComponent(UsersRepository users_repository) {
     this.users_repository = users_repository;
-    is_logined = false;
-  };
-  @Override
-  public Boolean IsLogined() {
-    return is_logined;
   };
   @Override
   public User Login(User user) {
-    User result = users_repository.ValidateUser(user);
-    is_logined = result != null;
-    return result;
-  };
-  @Override
-  public Boolean Logout() {
-    is_logined = false;
-    return true;
+    return users_repository.ValidateUser(user);
   };
   @Override
   public List<User> GetUsers() {

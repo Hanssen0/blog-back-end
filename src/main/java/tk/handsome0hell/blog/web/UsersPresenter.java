@@ -51,8 +51,10 @@ public class UsersPresenter {
     return true;
   };
   @DeleteMapping("login")
-  public Boolean Logout() {
-    return users_component.Logout();
+  public Boolean Logout(HttpSession session) {
+    UserIdRepository user_id_repository = new SessionUserIdRepository(session);
+    user_id_repository.setUserId(null);
+    return true;
   };
   @GetMapping("")
   public List<UserWithoutPassword> GetUsers() {
