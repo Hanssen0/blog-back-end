@@ -6,4 +6,5 @@ import java.util.List;
 interface UsersRepository {
   Boolean ValidateUser(User user);
   List<User> GetUsers();
+  Integer AddUser(User user);
 };

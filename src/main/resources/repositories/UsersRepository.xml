@@ -19,4 +19,10 @@
       password
     FROM accounts
   </select>
+  <insert id="AddUser">
+    INSERT INTO accounts
+      (username, password)
+    VALUES
+      (#{username}, #{password})
+  </insert>
 </mapper>
