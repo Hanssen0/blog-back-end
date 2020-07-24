@@ -20,7 +20,11 @@ public class BlogApplication {
     return new WebMvcConfigurer() {
       @Override
       public void addCorsMappings(CorsRegistry registry) {
-        registry.addMapping("/**").allowedOrigins("*").allowedMethods("*");
+        registry.
+          addMapping("/**").
+          allowedOrigins("http://localhost:8080").
+          allowCredentials(true).
+          allowedMethods("*");
       }
     };
   }
