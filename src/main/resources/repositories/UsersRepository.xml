@@ -3,7 +3,7 @@
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 
-<mapper namespace="tk.handsome0hell.blog.security.UsersRepository" >
+<mapper namespace="tk.handsome0hell.blog.user.UsersRepository" >
   <select id="ValidateUser" resultType="tk.handsome0hell.blog.pojo.User">
     SELECT
       id,
