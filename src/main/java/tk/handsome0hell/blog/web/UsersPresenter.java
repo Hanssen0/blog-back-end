@@ -20,6 +20,7 @@ class UserWithoutPassword {
   }
   public Integer getId() {return user.getId();}
   public String getUsername() {return user.getUsername();}
+  public Integer getRole_id() {return user.getRole_id();}
 };
 
 @RestController
