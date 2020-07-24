@@ -13,7 +13,7 @@ import tk.handsome0hell.blog.user.UsersComponent;
 import tk.handsome0hell.blog.pojo.PermissionsType;
 import tk.handsome0hell.blog.permission.UserIdRepository;
 import tk.handsome0hell.blog.permission.SessionUserIdRepository;
-import tk.handsome0hell.blog.permission.PermissionVerificationComponent;
+import tk.handsome0hell.blog.permission.PermissionComponent;
 import javax.servlet.http.HttpSession;
 import java.util.List;
 import java.util.LinkedList;
@@ -32,10 +32,10 @@ class UserWithoutPassword {
 @RequestMapping("/users")
 public class UsersPresenter {
   private UsersComponent users_component;
-  private PermissionVerificationComponent permission_component;
+  private PermissionComponent permission_component;
   public UsersPresenter(
       UsersComponent users_component,
-      PermissionVerificationComponent permission_component) {
+      PermissionComponent permission_component) {
     this.users_component = users_component;
     this.permission_component = permission_component;
   }

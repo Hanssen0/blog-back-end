@@ -4,17 +4,15 @@ import tk.handsome0hell.blog.pojo.PermissionsType;
 import java.util.List;
 
 class DatabasePermissionComponent
-  implements PermissionVerificationComponent {
-  private PermissionVerificationRepository permission_verification_repository;
-  DatabasePermissionComponent(
-      PermissionVerificationRepository permission_verification_repository) {
-    this.permission_verification_repository =
-      permission_verification_repository;
+  implements PermissionComponent {
+  private PermissionRepository permission_repository;
+  DatabasePermissionComponent(PermissionRepository permission_repository) {
+    this.permission_repository = permission_repository;
   }
   @Override
   public Boolean HasPermission(
       UserIdRepository repository, PermissionsType permission) {
-    return permission_verification_repository
+    return permission_repository
       .IsUserHasPermission(repository.getUserId(), permission.getId());
   }
   @Override
