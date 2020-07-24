@@ -38,4 +38,9 @@ class DatabaseUsersComponent implements UsersComponent {
     Integer number_of_deleted_rows = users_repository.DeleteUserById(id);
     return (number_of_deleted_rows == 1);
   }
+  @Override
+  public Boolean UpdateUser(User user) {
+    Integer number_of_updated_rows = users_repository.UpdateUser(user);
+    return (number_of_updated_rows == 1);
+  }
 };

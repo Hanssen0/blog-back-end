@@ -10,4 +10,5 @@ public interface UsersComponent {
   List<User> GetUsers();
   Boolean AddUser(User user);
   Boolean DeleteUserById(Integer id);
+  Boolean UpdateUser(User user);
 };
