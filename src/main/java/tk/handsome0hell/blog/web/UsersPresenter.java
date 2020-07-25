@@ -40,9 +40,15 @@ public class UsersPresenter {
     this.permission_component = permission_component;
   }
   @GetMapping("")
-  public List<UserWithoutPassword> GetUsers() {
+  public List<UserWithoutPassword> GetUsers(HttpSession session) {
     List<UserWithoutPassword> response_users =
       new LinkedList<UserWithoutPassword>();
+    UserIdRepository repository = new SessionUserIdRepository(session);
+    if (!permission_component.HasLogined(repository)) return response_users;
+    if (!permission_component
+        .HasPermission(repository, PermissionsType.kGetUsersList)) {
+      return response_users;
+    }
     List<User> users = users_component.GetUsers();
     for (User user : users) {
       response_users.add(new UserWithoutPassword(user));
@@ -60,12 +66,28 @@ public class UsersPresenter {
     return users_component.AddUser(user);
   };
   @DeleteMapping("{id}")
-  public Boolean DeleteUserById(@PathVariable("id") Integer id) {
+  public Boolean DeleteUserById(
+      @PathVariable("id") Integer id,
+      HttpSession session) {
+    UserIdRepository repository = new SessionUserIdRepository(session);
+    if (!permission_component.HasLogined(repository)) return false;
+    if (!permission_component
+        .HasPermission(repository, PermissionsType.kDeleteUser)) {
+      return false;
+    }
     return users_component.DeleteUserById(id);
   };
   @PutMapping("{id}")
-  public Boolean UpdateUser(@PathVariable("id") Integer id,
-                         @RequestBody User user) {
+  public Boolean UpdateUser(
+      @PathVariable("id") Integer id,
+      @RequestBody User user,
+      HttpSession session) {
+    UserIdRepository repository = new SessionUserIdRepository(session);
+    if (!permission_component.HasLogined(repository)) return false;
+    if (!permission_component
+        .HasPermission(repository, PermissionsType.kModifyUser)) {
+      return false;
+    }
     user.setId(id);
     return users_component.UpdateUser(user);
   };

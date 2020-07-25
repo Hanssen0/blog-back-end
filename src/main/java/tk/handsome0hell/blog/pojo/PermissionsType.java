@@ -1,7 +1,10 @@
 package tk.handsome0hell.blog.pojo;
 
 public enum PermissionsType {
-  kAddUser(1, "AddUser");
+  kAddUser(1, "AddUser"),
+  kDeleteUser(2, "DeleteUser"),
+  kModifyUser(3, "ModifyUser"),
+  kGetUsersList(4, "GetUsersList");
 
   private Integer id;
   private String name;
