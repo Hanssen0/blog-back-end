@@ -8,10 +8,11 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+import tk.handsome0hell.blog.pojo.ResponseBody;
+import tk.handsome0hell.blog.pojo.ErrorsType;
 import tk.handsome0hell.blog.pojo.User;
 import tk.handsome0hell.blog.users.UsersComponent;
 import tk.handsome0hell.blog.pojo.PermissionsType;
-import tk.handsome0hell.blog.permission.UserIdRepository;
 import tk.handsome0hell.blog.permission.SessionUserIdRepository;
 import tk.handsome0hell.blog.permission.PermissionComponent;
 import javax.servlet.http.HttpSession;
@@ -40,55 +41,62 @@ public class UsersPresenter {
     this.permission_component = permission_component;
   }
   @GetMapping("")
-  public List<UserWithoutPassword> GetUsers(HttpSession session) {
+  public ResponseBody GetUsers(HttpSession session) {
     List<UserWithoutPassword> response_users =
       new LinkedList<UserWithoutPassword>();
-    UserIdRepository repository = new SessionUserIdRepository(session);
-    if (!permission_component.HasLogined(repository)) return response_users;
-    if (!permission_component
-        .HasPermission(repository, PermissionsType.kGetUsersList)) {
-      return response_users;
+    ResponseBody response = new ResponseBody(response_users);
+    if (!response.VerifyPermission(permission_component,
+                                   new SessionUserIdRepository(session),
+                                   PermissionsType.kGetUsersList)) {
+      return response;
     }
     List<User> users = users_component.GetUsers();
     for (User user : users) {
       response_users.add(new UserWithoutPassword(user));
     }
-    return response_users;
+    return response;
   };
   @PostMapping("")
-  public Boolean AddUser(@RequestBody User user, HttpSession session) {
-    UserIdRepository repository = new SessionUserIdRepository(session);
-    if (!permission_component.HasLogined(repository)) return false;
-    if (!permission_component
-        .HasPermission(repository, PermissionsType.kAddUser)) {
-      return false;
+  public ResponseBody AddUser(
+      @RequestBody User user, HttpSession session) {
+    ResponseBody response = new ResponseBody();
+    if (!response.VerifyPermission(permission_component,
+                                   new SessionUserIdRepository(session),
+                                   PermissionsType.kAddUser)) {
+      return response;
     }
-    return users_component.AddUser(user);
+    // TODO: handle adding user error
+    users_component.AddUser(user);
+    return response;
   };
   @DeleteMapping("{id}")
-  public Boolean DeleteUserById(
+  public ResponseBody DeleteUserById(
       @PathVariable("id") Integer id,
       HttpSession session) {
-    UserIdRepository repository = new SessionUserIdRepository(session);
-    if (!permission_component.HasLogined(repository)) return false;
-    if (!permission_component
-        .HasPermission(repository, PermissionsType.kDeleteUser)) {
-      return false;
+    ResponseBody response = new ResponseBody();
+    if (!response.VerifyPermission(permission_component,
+                                   new SessionUserIdRepository(session),
+                                   PermissionsType.kDeleteUser)) {
+      return response;
     }
-    return users_component.DeleteUserById(id);
+    // TODO: handle deleting user error
+    users_component.DeleteUserById(id);
+    return response;
   };
   @PutMapping("{id}")
-  public Boolean UpdateUser(
+  public ResponseBody UpdateUser(
       @PathVariable("id") Integer id,
       @RequestBody User user,
       HttpSession session) {
-    UserIdRepository repository = new SessionUserIdRepository(session);
-    if (!permission_component.HasLogined(repository)) return false;
-    if (!permission_component
-        .HasPermission(repository, PermissionsType.kModifyUser)) {
-      return false;
+    ResponseBody response = new ResponseBody();
+    if (!response.VerifyPermission(permission_component,
+                                   new SessionUserIdRepository(session),
+                                   PermissionsType.kModifyUser)) {
+      return response;
     }
     user.setId(id);
-    return users_component.UpdateUser(user);
+    // TODO: handle modifying user error
+    users_component.UpdateUser(user);
+    return response;
   };
 }
