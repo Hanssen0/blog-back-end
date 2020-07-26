@@ -21,7 +21,7 @@ public class ResponseBody {
       return false;
     }
     if (!permission_component
-        .HasPermission(repository, PermissionsType.kGetUsersList)) {
+        .HasPermission(repository, permission_type)) {
       SetNoPermissionError(permission_type);
       return false;
     }
