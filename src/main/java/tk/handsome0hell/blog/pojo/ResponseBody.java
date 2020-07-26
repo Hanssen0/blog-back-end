@@ -32,9 +32,13 @@ public class ResponseBody {
     this.error_type = error_type.toString();
     this.error_information = error_information;
   }
+  public void SetError(ErrorsType error_type) {
+    this.SetError(error_type, null);
+  }
   public void SetNotLoggedInError() {
     this.data = null;
     this.error_type = ErrorsType.kNotLoggedIn.toString();
+    this.error_information = null;
   }
   public void SetNoPermissionError(PermissionsType permission) {
     this.data = null;
