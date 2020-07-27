@@ -11,26 +11,12 @@ import org.springframework.context.annotation.ImportResource;
 
 import org.springframework.web.servlet.function.RouterFunction;
 import org.springframework.web.servlet.function.ServerResponse;
-import org.springframework.web.servlet.function.RequestPredicate;
-import org.springframework.web.servlet.function.HandlerFunction;
 import org.springframework.web.servlet.function.RouterFunctions;
 
+import tk.handsome0hell.blog.web.Route;
 import tk.handsome0hell.blog.web.ArticlesPresenter;
 
 import java.util.List;
-import java.util.LinkedList;
-
-class Route {
-  private RequestPredicate predicate;
-  private HandlerFunction<ServerResponse> handler;
-  Route(RequestPredicate predicate,
-                       HandlerFunction<ServerResponse> handler) {
-    this.predicate = predicate;
-    this.handler = handler;
-  }
-  RequestPredicate getPredicate() { return predicate; }
-  HandlerFunction<ServerResponse> getHandler() { return handler; }
-}
 
 @SpringBootApplication
 @ImportResource(value={"classpath:applicationBeans.xml"})
@@ -54,16 +40,7 @@ public class BlogApplication {
   @Bean
   public RouterFunction<ServerResponse> RouteArticlesPresenter(
       ArticlesPresenter presenter) {
-    final List<Route> routes = new LinkedList<Route>();
-    routes.add(
-      new Route(presenter.getPredicateGetArticles(), presenter::GetArticles)
-    );
-    routes.add(
-      new Route(presenter.getPredicateGetArticle(), presenter::GetArticle)
-    );
-    routes.add(
-      new Route(presenter.getPredicatePutArticle(), presenter::PutArticle)
-    );
+    final List<Route> routes = presenter.BuildRoutes();
     RouterFunctions.Builder builder = RouterFunctions.route();
     for (Route route : routes) {
       builder.route(route.getPredicate(), route.getHandler());

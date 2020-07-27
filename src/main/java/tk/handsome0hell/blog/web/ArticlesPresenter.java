@@ -5,15 +5,20 @@ import org.springframework.web.servlet.function.RequestPredicate;
 import org.springframework.web.servlet.function.RequestPredicates;
 import org.springframework.web.servlet.function.ServerResponse;
 import org.springframework.web.servlet.function.ServerRequest;
+
 import tk.handsome0hell.blog.pojo.ResponseBody;
 import tk.handsome0hell.blog.pojo.Article;
 import tk.handsome0hell.blog.articles.ArticlesComponent;
 import tk.handsome0hell.blog.pojo.PermissionsType;
 import tk.handsome0hell.blog.permission.SessionUserIdRepository;
 import tk.handsome0hell.blog.permission.PermissionComponent;
+
 import javax.servlet.http.HttpSession;
 import javax.servlet.ServletException;
 import java.io.IOException;
+
+import java.util.List;
+import java.util.LinkedList;
 
 @Component
 public class ArticlesPresenter {
@@ -25,31 +30,28 @@ public class ArticlesPresenter {
     this.articles_component = articles_component;
     this.permission_component = permission_component;
   }
-  public String getURIRoot() {return "/articles";}
-
-  public RequestPredicate getPredicateGetArticles() {
-    return RequestPredicates.GET(getURIRoot() + "");
+  public List<Route> BuildRoutes() {
+    final String root = "/articles";
+    final List<Route> routes = new LinkedList<Route>();
+    routes.add(new Route(RequestPredicates.GET(root + ""), this::GetArticles));
+    routes.add(
+      new Route(RequestPredicates.GET(root + "{id}"), this::GetArticle));
+    routes.add(
+      new Route(RequestPredicates.GET(root + "{id}"), this::PutArticle));
+    return routes;
   }
-  public ServerResponse GetArticles(ServerRequest request) {
+  ServerResponse GetArticles(ServerRequest request) {
     return ServerResponse.ok()
              .body(new ResponseBody(articles_component.GetArticles()));
   }
-
-  public RequestPredicate getPredicateGetArticle() {
-    return RequestPredicates.GET(getURIRoot() + "/{id}");
-  }
-  public ServerResponse GetArticle(ServerRequest request) {
+  ServerResponse GetArticle(ServerRequest request) {
     // TODO: Handle number parsing error
     Integer id = Integer.parseInt(request.pathVariable("id"));
     // TODO: Handle article not fund error
     return ServerResponse.ok()
              .body(new ResponseBody(articles_component.GetArticleById(id)));
   }
-
-  public RequestPredicate getPredicatePutArticle() {
-    return RequestPredicates.PUT(getURIRoot() + "/{id}");
-  }
-  public ServerResponse PutArticle(ServerRequest request) {
+  ServerResponse PutArticle(ServerRequest request) {
     ResponseBody response_body = new ResponseBody();
     ServerResponse response = ServerResponse.ok().body(response_body);
     if (!response_body.VerifyPermission(
