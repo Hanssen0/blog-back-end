@@ -20,6 +20,7 @@ import tk.handsome0hell.blog.web.Route;
 import tk.handsome0hell.blog.web.ArticlesPresenter;
 import tk.handsome0hell.blog.web.UsersPresenter;
 import tk.handsome0hell.blog.web.LoginPresenter;
+import tk.handsome0hell.blog.web.RolesPresenter;
 
 import tk.handsome0hell.blog.pojo.PermissionsType;
 import tk.handsome0hell.blog.pojo.ResponseBody;
@@ -65,6 +66,11 @@ public class BlogApplication {
   @Bean
   public RouterFunction<ServerResponse> RouteLoginPresenter(
       LoginPresenter presenter) {
+    return BuildRoutes(presenter.BuildRoutes());
+  }
+  @Bean
+  public RouterFunction<ServerResponse> RouteRolesPresenter(
+      RolesPresenter presenter) {
     return BuildRoutes(presenter.BuildRoutes());
   }
   private RouterFunction<ServerResponse> BuildRoutes(List<Route> routes) {
