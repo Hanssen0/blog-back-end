@@ -10,7 +10,6 @@ import tk.handsome0hell.blog.pojo.ResponseBody;
 import tk.handsome0hell.blog.pojo.User;
 import tk.handsome0hell.blog.users.UsersComponent;
 import tk.handsome0hell.blog.pojo.PermissionsType;
-import tk.handsome0hell.blog.permission.PermissionComponent;
 
 import javax.servlet.ServletException;
 import java.io.IOException;
@@ -31,12 +30,8 @@ class UserWithoutPassword {
 @Component
 public class UsersPresenter {
   private UsersComponent users_component;
-  private PermissionComponent permission_component;
-  public UsersPresenter(
-      UsersComponent users_component,
-      PermissionComponent permission_component) {
+  public UsersPresenter(UsersComponent users_component) {
     this.users_component = users_component;
-    this.permission_component = permission_component;
   }
   public List<Route> BuildRoutes() {
     final String root = "/users";
