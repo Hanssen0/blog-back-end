@@ -37,7 +37,7 @@ public class ArticlesPresenter {
     routes.add(
       new Route(RequestPredicates.GET(root + "{id}"), this::GetArticle));
     routes.add(
-      new Route(RequestPredicates.GET(root + "{id}"), this::PutArticle));
+      new Route(RequestPredicates.PUT(root + "{id}"), this::PutArticle));
     return routes;
   }
   ServerResponse GetArticles(ServerRequest request) {
