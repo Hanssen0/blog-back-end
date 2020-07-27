@@ -22,10 +22,12 @@ import tk.handsome0hell.blog.web.UsersPresenter;
 import tk.handsome0hell.blog.web.LoginPresenter;
 import tk.handsome0hell.blog.web.RolesPresenter;
 
+import tk.handsome0hell.blog.pojo.ErrorsType;
 import tk.handsome0hell.blog.pojo.PermissionsType;
 import tk.handsome0hell.blog.pojo.ResponseBody;
 
 import tk.handsome0hell.blog.permission.PermissionComponent;
+import tk.handsome0hell.blog.permission.UserIdRepository;
 import tk.handsome0hell.blog.permission.SessionUserIdRepository;
 
 import java.util.List;
@@ -80,13 +82,18 @@ public class BlogApplication {
     if (permission == null) return handler;
     return (ServerRequest request) -> {
         ResponseBody response = new ResponseBody();
-        if (!response.VerifyPermission(
-              permission_component,
-              new SessionUserIdRepository(request.session()),
-              PermissionsType.kModifyArticle)) {
-          return ServerResponse.badRequest().body(response);
+        UserIdRepository repository =
+          new SessionUserIdRepository(request.session());
+        ServerResponse badrequest = ServerResponse.badRequest().body(response);
+        if (!permission_component.HasLogined(repository)) {
+          response.SetError(ErrorsType.kNotLoggedIn);
+        } else if (
+            !permission_component.HasPermission(repository, permission)) {
+          response.SetError(ErrorsType.kNoPermission, permission.getName());
+        } else {
+          return handler.handle(request);
         }
-        return handler.handle(request);
+        return badrequest;
       };
   }
 }
