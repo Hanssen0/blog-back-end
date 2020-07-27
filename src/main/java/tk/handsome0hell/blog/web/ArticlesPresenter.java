@@ -10,8 +10,6 @@ import tk.handsome0hell.blog.pojo.ResponseBody;
 import tk.handsome0hell.blog.pojo.Article;
 import tk.handsome0hell.blog.articles.ArticlesComponent;
 import tk.handsome0hell.blog.pojo.PermissionsType;
-import tk.handsome0hell.blog.permission.SessionUserIdRepository;
-import tk.handsome0hell.blog.permission.PermissionComponent;
 
 import javax.servlet.http.HttpSession;
 import javax.servlet.ServletException;
@@ -23,12 +21,8 @@ import java.util.LinkedList;
 @Component
 public class ArticlesPresenter {
   private ArticlesComponent articles_component;
-  private PermissionComponent permission_component;
-  public ArticlesPresenter(
-      ArticlesComponent articles_component,
-      PermissionComponent permission_component) {
+  public ArticlesPresenter(ArticlesComponent articles_component) {
     this.articles_component = articles_component;
-    this.permission_component = permission_component;
   }
   public List<Route> BuildRoutes() {
     final String root = "/articles";
@@ -37,7 +31,9 @@ public class ArticlesPresenter {
     routes.add(
       new Route(RequestPredicates.GET(root + "/{id}"), this::GetArticle));
     routes.add(
-      new Route(RequestPredicates.PUT(root + "/{id}"), this::PutArticle));
+      new Route(RequestPredicates.PUT(root + "/{id}"), this::PutArticle)
+        .AddRequiredPermission(PermissionsType.kModifyArticle)
+    );
     return routes;
   }
   ServerResponse GetArticles(ServerRequest request) {
@@ -52,14 +48,6 @@ public class ArticlesPresenter {
              .body(new ResponseBody(articles_component.GetArticleById(id)));
   }
   ServerResponse PutArticle(ServerRequest request) {
-    ResponseBody response_body = new ResponseBody();
-    ServerResponse response = ServerResponse.ok().body(response_body);
-    if (!response_body.VerifyPermission(
-          permission_component,
-          new SessionUserIdRepository(request.session()),
-          PermissionsType.kModifyArticle)) {
-      return response;
-    }
     Article article;
     // TODO: Handle wrong entity errors
     try { article = request.body(Article.class); }
@@ -72,6 +60,6 @@ public class ArticlesPresenter {
     Integer id = Integer.parseInt(request.pathVariable("id"));
     article.setId(id);
     articles_component.UpdateArticle(article);
-    return response;
+    return ServerResponse.ok().body(new ResponseBody());
   }
 }
