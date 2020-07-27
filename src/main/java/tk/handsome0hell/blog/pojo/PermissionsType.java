@@ -5,7 +5,11 @@ public enum PermissionsType {
   kDeleteUser(2, "DeleteUser"),
   kModifyUser(3, "ModifyUser"),
   kGetUsersList(4, "GetUsersList"),
-  kModifyArticle(5, "ModifyArticle");
+  kModifyArticle(5, "ModifyArticle"),
+  kGetRoles(6, "GetRoles"),
+  kGetPermissionsOfRole(7, "GetPermissionsOfRole"),
+  kAddPermissionsToTole(8, "AddPermissionsToRole"),
+  kDeletePermissionsFromRole(9, "DeletePermissionFromRole");
 
   private Integer id;
   private String name;

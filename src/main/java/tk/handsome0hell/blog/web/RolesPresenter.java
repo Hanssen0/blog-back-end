@@ -6,6 +6,7 @@ import org.springframework.web.servlet.function.RequestPredicates;
 import org.springframework.web.servlet.function.ServerResponse;
 import org.springframework.web.servlet.function.ServerRequest;
 
+import tk.handsome0hell.blog.pojo.PermissionsType;
 import tk.handsome0hell.blog.pojo.Role;
 import tk.handsome0hell.blog.pojo.Permission;
 import tk.handsome0hell.blog.roles.RolesComponent;
@@ -26,16 +27,21 @@ public class RolesPresenter {
   public List<Route> BuildRoutes() {
     final String root = "/roles";
     final List<Route> routes = new LinkedList<Route>();
-    routes.add(new Route(RequestPredicates.GET(root), this::GetRoles));
+    routes.add(
+      new Route(RequestPredicates.GET(root), this::GetRoles)
+        .AddRequiredPermission(PermissionsType.kGetRoles));
     routes.add(
       new Route(RequestPredicates.GET(root + "/{id}"),
-                this::GetPermissionsOfRole));
+                this::GetPermissionsOfRole)
+        .AddRequiredPermission(PermissionsType.kGetPermissionsOfRole));
     routes.add(
       new Route(RequestPredicates.POST(root + "/{id}"),
-                this::AddPermissionToRole));
+                this::AddPermissionToRole)
+        .AddRequiredPermission(PermissionsType.kAddPermissionsToTole));
     routes.add(
       new Route(RequestPredicates.DELETE(root + "/{role_id}/{permission_id}"),
-                this::DeletePermissionFromRole));
+                this::DeletePermissionFromRole)
+        .AddRequiredPermission(PermissionsType.kDeletePermissionsFromRole));
     return routes;
   }
   ServerResponse GetRoles(ServerRequest request) {
