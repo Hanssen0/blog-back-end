@@ -55,33 +55,25 @@ public class BlogApplication {
   }
   @Bean
   public RouterFunction<ServerResponse> RouteArticlesPresenter(
-      ArticlesPresenter presenter) {
-    return BuildRoutes(presenter.BuildRoutes());
-  }
-  @Bean
-  public RouterFunction<ServerResponse> RouteUsersPresenter(
-      UsersPresenter presenter) {
-    return BuildRoutes(presenter.BuildRoutes());
-  }
-  @Bean
-  public RouterFunction<ServerResponse> RouteLoginPresenter(
-      LoginPresenter presenter) {
-    return BuildRoutes(presenter.BuildRoutes());
-  }
-  @Bean
-  public RouterFunction<ServerResponse> RouteRolesPresenter(
-      RolesPresenter presenter) {
-    return BuildRoutes(presenter.BuildRoutes());
-  }
-  private RouterFunction<ServerResponse> BuildRoutes(List<Route> routes) {
+      ArticlesPresenter articles_presenter,
+      UsersPresenter users_presenter,
+      LoginPresenter login_presenter,
+      RolesPresenter roles_presenter) {
     RouterFunctions.Builder builder = RouterFunctions.route();
+    AddRoutes(builder, articles_presenter.BuildRoutes());
+    AddRoutes(builder, users_presenter.BuildRoutes());
+    AddRoutes(builder, login_presenter.BuildRoutes());
+    AddRoutes(builder, roles_presenter.BuildRoutes());
+    return builder.build();
+  }
+  private void AddRoutes(
+      RouterFunctions.Builder builder, List<Route> routes) {
     for (Route route : routes) {
       HandlerFunction<ServerResponse> decorated_function = route.getHandler();
       decorated_function =
         PermissionDecorator(decorated_function, route.getPermission());
       builder.route(route.getPredicate(), decorated_function);
     }
-    return builder.build();
   }
   private HandlerFunction<ServerResponse> PermissionDecorator(
       HandlerFunction<ServerResponse> handler, PermissionsType permission) {
