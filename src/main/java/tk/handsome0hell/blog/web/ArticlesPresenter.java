@@ -1,11 +1,10 @@
 package tk.handsome0hell.blog.web;
 
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.stereotype.Component;
+import org.springframework.web.servlet.function.RequestPredicate;
+import org.springframework.web.servlet.function.RequestPredicates;
+import org.springframework.web.servlet.function.ServerResponse;
+import org.springframework.web.servlet.function.ServerRequest;
 import tk.handsome0hell.blog.pojo.ResponseBody;
 import tk.handsome0hell.blog.pojo.Article;
 import tk.handsome0hell.blog.articles.ArticlesComponent;
@@ -13,9 +12,10 @@ import tk.handsome0hell.blog.pojo.PermissionsType;
 import tk.handsome0hell.blog.permission.SessionUserIdRepository;
 import tk.handsome0hell.blog.permission.PermissionComponent;
 import javax.servlet.http.HttpSession;
+import javax.servlet.ServletException;
+import java.io.IOException;
 
-@RestController
-@RequestMapping("/articles")
+@Component
 public class ArticlesPresenter {
   private ArticlesComponent articles_component;
   private PermissionComponent permission_component;
@@ -25,26 +25,49 @@ public class ArticlesPresenter {
     this.articles_component = articles_component;
     this.permission_component = permission_component;
   }
-  @GetMapping("")
-  public ResponseBody GetArticles() {
-    return new ResponseBody(articles_component.GetArticles());
+  public String getURIRoot() {return "/articles";}
+
+  public RequestPredicate getPredicateGetArticles() {
+    return RequestPredicates.GET(getURIRoot() + "");
   }
-  @GetMapping("{id}")
-  public ResponseBody GetArticle(@PathVariable("id") Integer id) {
+  public ServerResponse GetArticles(ServerRequest request) {
+    return ServerResponse.ok()
+             .body(new ResponseBody(articles_component.GetArticles()));
+  }
+
+  public RequestPredicate getPredicateGetArticle() {
+    return RequestPredicates.GET(getURIRoot() + "/{id}");
+  }
+  public ServerResponse GetArticle(ServerRequest request) {
+    // TODO: Handle number parsing error
+    Integer id = Integer.parseInt(request.pathVariable("id"));
     // TODO: Handle article not fund error
-    return new ResponseBody(articles_component.GetArticleById(id));
+    return ServerResponse.ok()
+             .body(new ResponseBody(articles_component.GetArticleById(id)));
   }
-  @PutMapping("{id}")
-  public ResponseBody PutArticle(
-      @PathVariable("id") Integer id,
-      @RequestBody Article article,
-      HttpSession session) {
-    ResponseBody response = new ResponseBody();
-    if (!response.VerifyPermission(permission_component,
-                                   new SessionUserIdRepository(session),
-                                   PermissionsType.kModifyArticle)) {
+
+  public RequestPredicate getPredicatePutArticle() {
+    return RequestPredicates.PUT(getURIRoot() + "/{id}");
+  }
+  public ServerResponse PutArticle(ServerRequest request) {
+    ResponseBody response_body = new ResponseBody();
+    ServerResponse response = ServerResponse.ok().body(response_body);
+    if (!response_body.VerifyPermission(
+          permission_component,
+          new SessionUserIdRepository(request.session()),
+          PermissionsType.kModifyArticle)) {
       return response;
     }
+    Article article;
+    // TODO: Handle wrong entity errors
+    try { article = request.body(Article.class); }
+    catch (ServletException expection) {
+      return ServerResponse.unprocessableEntity().build();
+    } catch (IOException expection) {
+      return ServerResponse.unprocessableEntity().build();
+    }
+    // TODO: Handle number parsing error
+    Integer id = Integer.parseInt(request.pathVariable("id"));
     article.setId(id);
     articles_component.UpdateArticle(article);
     return response;
