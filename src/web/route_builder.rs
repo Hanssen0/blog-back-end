@@ -16,7 +16,7 @@ impl RouteBuilder {
         RouteBuilder { uri: uri, route: Box::new(route), handler: Arc::new(handler) }
     }
     pub fn decorate(
-            self, decorator : impl Fn(RouteHandlerArc) -> RouteHandlerArc)
+            self, decorator : &impl Fn(RouteHandlerArc) -> RouteHandlerArc)
             -> RouteBuilder {
         RouteBuilder { handler: decorator(self.handler), ..self }
     }

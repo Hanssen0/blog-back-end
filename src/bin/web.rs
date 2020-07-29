@@ -1,13 +1,48 @@
 use actix_web::{ App, HttpServer };
 use std::sync::Arc;
-use blog_back_end::web::articles_presenter;
+use diesel::r2d2::{ ConnectionManager, Pool };
+use diesel::mysql::{ MysqlConnection };
+
+use blog_back_end::web::route_builder::RouteBuilder;
+
+use blog_back_end::articles::ArticlesComponentFactory;
+use blog_back_end::web::articles_presenter::ArticlesPresenter;
+
+trait RouteBuilderVector {
+    fn merge(self, source: Self) -> Self;
+}
+impl RouteBuilderVector for Vec<RouteBuilder> {
+    fn merge(mut self, source: Self) -> Self {
+        for route in source {
+            self.push(route);
+        }
+        self
+    }
+}
+
+
 
 #[actix_rt::main]
 async fn main() -> std::io::Result<()> {
-    let mut http_routes = vec![];
-    let routes = articles_presenter::get_routes();
-    for route in routes { http_routes.push(route); }
-    let http_routes_arc = Arc::new(http_routes);
+    let manager : ConnectionManager<MysqlConnection> =
+        ConnectionManager::new("mysql://root@localhost/blog");
+    let pool = Pool::builder()
+        .max_size(10)
+        .build(manager)
+        .unwrap();
+
+    let pool_clone = pool.clone();
+    let article_routes = ArticlesPresenter::new(
+            ArticlesComponentFactory::new()
+                .pool(move || pool_clone.get().unwrap())
+                .build()
+        );
+
+    let http_routes_arc = Arc::new(
+        vec![]
+            .merge(article_routes.get_routes())
+    );
+
     HttpServer::new(
         move || {
             let mut app = App::new();
