@@ -1,6 +1,6 @@
+use diesel::Queryable;
 use serde::Deserialize;
 use serde::Serialize;
-use diesel::Queryable;
 #[derive(Queryable, Deserialize, Serialize)]
 pub struct Article {
     pub id: u32,

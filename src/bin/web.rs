@@ -1,7 +1,8 @@
-use actix_web::{ App, HttpServer };
+use actix_cors::Cors;
+use actix_web::{App, HttpServer};
+use diesel::mysql::MysqlConnection;
+use diesel::r2d2::{ConnectionManager, Pool};
 use std::sync::Arc;
-use diesel::r2d2::{ ConnectionManager, Pool };
-use diesel::mysql::{ MysqlConnection };
 
 use blog_back_end::web::route_builder::RouteBuilder;
 
@@ -20,38 +21,34 @@ impl RouteBuilderVector for Vec<RouteBuilder> {
     }
 }
 
-
-
 #[actix_rt::main]
 async fn main() -> std::io::Result<()> {
-    let manager : ConnectionManager<MysqlConnection> =
+    let manager: ConnectionManager<MysqlConnection> =
         ConnectionManager::new("mysql://root@localhost/blog");
-    let pool = Pool::builder()
-        .max_size(10)
-        .build(manager)
-        .unwrap();
+    let pool = Pool::builder().max_size(10).build(manager).unwrap();
 
     let pool_clone = pool.clone();
     let article_routes = ArticlesPresenter::new(
-            ArticlesComponentFactory::new()
-                .pool(move || pool_clone.get().unwrap())
-                .build()
-        );
-
-    let http_routes_arc = Arc::new(
-        vec![]
-            .merge(article_routes.get_routes())
+        ArticlesComponentFactory::new()
+            .pool(move || pool_clone.get().unwrap())
+            .build(),
     );
 
-    HttpServer::new(
-        move || {
-            let mut app = App::new();
-            for route in http_routes_arc.iter() {
-                app = app.service(route.build());
-            }
-            app
-        })
+    let http_routes_arc = Arc::new(vec![].merge(article_routes.get_routes()));
+
+    HttpServer::new(move || {
+        let mut app = App::new().wrap(
+            Cors::new()
+                .supports_credentials()
+                .allowed_origin("http://localhost:8080")
+                .finish(),
+        );
+        for route in http_routes_arc.iter() {
+            app = app.service(route.build());
+        }
+        app
+    })
     .bind("127.0.0.1:8090")?
-        .run()
-        .await
+    .run()
+    .await
 }

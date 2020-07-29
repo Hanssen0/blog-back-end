@@ -1,4 +1,4 @@
-use actix_web::{ Route, HttpRequest, HttpResponse, Resource, web };
+use actix_web::{web, HttpRequest, HttpResponse, Resource, Route};
 use std::sync::Arc;
 
 pub type RouteHandlerArc = Arc<dyn Fn(&HttpRequest) -> HttpResponse + Sync + Send + 'static>;
@@ -9,24 +9,27 @@ pub struct RouteBuilder {
 }
 impl RouteBuilder {
     pub fn new(
-            uri: String,
-            route: impl Fn() -> Route + Sync + Send + 'static,
-            handler: impl Fn(&HttpRequest) -> HttpResponse + Sync + Send + 'static)
-            -> RouteBuilder{
-        RouteBuilder { uri: uri, route: Box::new(route), handler: Arc::new(handler) }
+        uri: String,
+        route: impl Fn() -> Route + Sync + Send + 'static,
+        handler: impl Fn(&HttpRequest) -> HttpResponse + Sync + Send + 'static,
+    ) -> RouteBuilder {
+        RouteBuilder {
+            uri: uri,
+            route: Box::new(route),
+            handler: Arc::new(handler),
+        }
     }
-    pub fn decorate(
-            self, decorator : &impl Fn(RouteHandlerArc) -> RouteHandlerArc)
-            -> RouteBuilder {
-        RouteBuilder { handler: decorator(self.handler), ..self }
+    pub fn decorate(self, decorator: &impl Fn(RouteHandlerArc) -> RouteHandlerArc) -> RouteBuilder {
+        RouteBuilder {
+            handler: decorator(self.handler),
+            ..self
+        }
     }
     pub fn build(&self) -> Resource {
         let handler = self.handler.clone();
-        web::resource(&(self.uri)).route((self.route)().to(
-            move |request: HttpRequest| {
-                let handler_for_async = handler.clone();
-                async move { handler_for_async(&request) }
-            }
-        ))
+        web::resource(&(self.uri)).route((self.route)().to(move |request: HttpRequest| {
+            let handler_for_async = handler.clone();
+            async move { handler_for_async(&request) }
+        }))
     }
 }
