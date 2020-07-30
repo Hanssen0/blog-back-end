@@ -47,6 +47,7 @@ where
 pub trait ArticlesComponent {
     fn get_articles(&self) -> Vec<Article>;
     fn get_article(&self, id: u32) -> Option<Article>;
+    fn modify_article(&self, article: &Article) -> bool;
 }
 
 struct DatabaseArticlesComponent<'a, R: ArticlesRepository + Sync + Send + 'a> {
@@ -62,11 +63,15 @@ impl<'a, R: ArticlesRepository + Sync + Send + 'a> ArticlesComponent
     fn get_article(&self, id: u32) -> Option<Article> {
         self.repository.query_articles_by_id(id)
     }
+    fn modify_article(&self, article: &Article) -> bool {
+        self.repository.update_article(article)
+    }
 }
 
 trait ArticlesRepository {
     fn query_articles(&self) -> Vec<Article>;
     fn query_articles_by_id(&self, id: u32) -> Option<Article>;
+    fn update_article(&self, article: &Article) -> bool;
 }
 
 struct MySQLArticlesRepository<'a, T, C>
@@ -98,5 +103,21 @@ where
             .find(id)
             .get_result::<Article>(&connection)
             .ok()
+    }
+    fn update_article(&self, article: &Article) -> bool {
+        let connection = (self.pool)();
+        match diesel::update(articles::table)
+            .filter(articles::id.eq(article.id))
+            .set(article)
+            .execute(&connection)
+        {
+            Ok(1) => true,
+            Ok(0) => false,
+            Ok(n) => panic!(format!("Wrong number of updating article: {}", n)),
+            Err(msg) => panic!(format!(
+                "Error occurs while updating article: {}",
+                msg.to_string()
+            )),
+        }
     }
 }

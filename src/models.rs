@@ -1,7 +1,10 @@
+use crate::schema::articles;
+use diesel::AsChangeset;
 use diesel::Queryable;
 use serde::Deserialize;
 use serde::Serialize;
-#[derive(Queryable, Deserialize, Serialize)]
+#[derive(Queryable, AsChangeset, Deserialize, Serialize)]
+#[table_name = "articles"]
 pub struct Article {
     pub id: u32,
     pub title: Option<String>,
