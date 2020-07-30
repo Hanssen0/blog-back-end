@@ -1,9 +1,7 @@
 use diesel::connection::Connection;
 use diesel::mysql::Mysql;
-use diesel::query_dsl::RunQueryDsl;
 
 use crate::models::Article;
-use crate::schema::articles;
 
 use std::marker::PhantomData;
 
@@ -50,6 +48,7 @@ where
 
 pub trait ArticlesComponent {
     fn get_articles(&self) -> Vec<Article>;
+    fn get_article(&self, id: u32) -> Article;
 }
 
 struct DatabaseArticlesComponent<'a, R: ArticlesRepository + Sync + Send + 'a> {
@@ -62,10 +61,14 @@ impl<'a, R: ArticlesRepository + Sync + Send + 'a> ArticlesComponent
     fn get_articles(&self) -> Vec<Article> {
         self.repository.query_articles()
     }
+    fn get_article(&self, id: u32) -> Article {
+        self.repository.query_articles_by_id(id)
+    }
 }
 
 trait ArticlesRepository {
     fn query_articles(&self) -> Vec<Article>;
+    fn query_articles_by_id(&self, id: u32) -> Article;
 }
 
 struct MySQLArticlesRepository<'a, T, C>
@@ -76,6 +79,10 @@ where
     pool: T,
     _phantom: PhantomData<&'a T>,
 }
+
+use crate::schema::articles;
+use diesel::prelude::*;
+
 impl<'a, T, C> ArticlesRepository for MySQLArticlesRepository<'a, T, C>
 where
     T: Fn() -> C + Sync + Send + 'a,
@@ -86,5 +93,12 @@ where
         articles::table
             .load::<Article>(&connection)
             .expect("Error loading articles")
+    }
+    fn query_articles_by_id(&self, id: u32) -> Article {
+        let connection = (self.pool)();
+        articles::table
+            .find(id)
+            .get_result::<Article>(&connection)
+            .expect(&format!("Error getting article: {}", id))
     }
 }
