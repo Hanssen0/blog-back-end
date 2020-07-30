@@ -18,25 +18,25 @@ impl<C: ArticlesComponent + Sync + Send + 'static> ArticlesPresenter<C> {
         }
     }
     pub fn get_routes(self) -> Vec<RouteBuilder> {
-        let arc = Arc::new(self);
-        let arc_clone_1 = arc.clone();
-        let arc_clone_2 = arc.clone();
+        let self_arc = Arc::new(self);
+        let self_arc_1 = self_arc.clone();
+        let self_arc_2 = self_arc.clone();
         vec![
-            RouteBuilder::new("/articles".to_string(), web::get, move |_: &HttpRequest| {
-                arc_clone_1.get_articles()
+            RouteBuilder::new("/articles".to_string(), web::get, move |_: HttpRequest| {
+                Box::pin(self_arc_1.clone().get_articles())
             }),
             RouteBuilder::new(
                 "/articles/{id}".to_string(),
                 web::get,
-                move |request: &HttpRequest| arc_clone_2.get_article(request),
+                move |request: HttpRequest| Box::pin(self_arc_2.clone().get_article(request)),
             ),
         ]
     }
-    fn get_articles(&self) -> HttpResponse {
+    async fn get_articles(self: Arc<Self>) -> HttpResponse {
         let result = self.articles_component.get_articles();
         HttpResponse::Ok().json(ResponseBody::ok(result))
     }
-    fn get_article(&self, request: &HttpRequest) -> HttpResponse {
+    async fn get_article(self: Arc<Self>, request: HttpRequest) -> HttpResponse {
         let params: Result<u32, _> = request.match_info().load();
         let id = match params {
             Ok(id) => id,
