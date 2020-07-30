@@ -24,11 +24,9 @@ where
             _phantom: PhantomData,
         }
     }
-    pub fn pool(self, pool: P) -> Self {
-        ArticlesComponentFactory {
-            pool: Some(pool),
-            ..self
-        }
+    pub fn pool(mut self, pool: P) -> Self {
+        self.pool = Some(pool);
+        self
     }
     pub fn build(&self) -> impl ArticlesComponent + Sync + Send + 'a {
         let pool = self.pool.clone();

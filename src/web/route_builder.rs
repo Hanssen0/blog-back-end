@@ -19,11 +19,9 @@ impl RouteBuilder {
             handler: Arc::new(handler),
         }
     }
-    pub fn decorate(self, decorator: &impl Fn(RouteHandlerArc) -> RouteHandlerArc) -> RouteBuilder {
-        RouteBuilder {
-            handler: decorator(self.handler),
-            ..self
-        }
+    pub fn decorate(mut self, decorator: &impl Fn(RouteHandlerArc) -> RouteHandlerArc) -> RouteBuilder {
+        self.handler = decorator(self.handler);
+        self
     }
     pub fn build(&self) -> Resource {
         let handler = self.handler.clone();
