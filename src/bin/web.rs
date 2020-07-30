@@ -44,7 +44,8 @@ async fn main() -> std::io::Result<()> {
                 .finish(),
         );
         for route in http_routes_arc.iter() {
-            app = app.service(route.build());
+            let (path, route) = route.build();
+            app = app.route(path, route);
         }
         app
     })

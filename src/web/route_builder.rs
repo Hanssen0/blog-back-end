@@ -1,4 +1,4 @@
-use actix_web::{web, HttpRequest, HttpResponse, Resource, Route};
+use actix_web::{HttpRequest, HttpResponse, Route};
 use std::future::Future;
 use std::pin::Pin;
 use std::sync::Arc;
@@ -33,9 +33,11 @@ impl RouteBuilder {
         self.handler = decorator(self.handler);
         self
     }
-    pub fn build(&self) -> Resource {
+    pub fn build(&self) -> (&String, Route) {
         let handler = self.handler.clone();
-        web::resource(&(self.uri))
-            .route((self.route)().to(move |request: HttpRequest| handler(request)))
+        (
+            &self.uri,
+            (self.route)().to(move |request: HttpRequest| handler(request)),
+        )
     }
 }
