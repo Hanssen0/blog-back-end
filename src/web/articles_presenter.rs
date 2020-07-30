@@ -40,8 +40,11 @@ impl<C: ArticlesComponent + Sync + Send + 'static> ArticlesPresenter<C> {
         let params: Result<u32, _> = request.match_info().load();
         let id = match params {
             Ok(id) => id,
-            Err(msg) => return HttpResponse::Ok().body(msg.to_string()),
+            Err(_) => return HttpResponse::NotFound().finish(),
         };
-        HttpResponse::Ok().json(ResponseBody::ok(self.articles_component.get_article(id)))
+        match self.articles_component.get_article(id) {
+            Some(article) => HttpResponse::Ok().json(ResponseBody::ok(article)),
+            None => HttpResponse::NotFound().finish(),
+        }
     }
 }
