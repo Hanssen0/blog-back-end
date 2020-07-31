@@ -6,6 +6,7 @@ use serde::Serialize;
 #[derive(Queryable, AsChangeset, Deserialize, Serialize)]
 #[table_name = "articles"]
 pub struct Article {
+    #[serde(default)]
     pub id: u32,
     pub title: Option<String>,
     pub subtitle: Option<String>,

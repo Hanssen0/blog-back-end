@@ -1,10 +1,14 @@
+use actix_web::web::Payload;
 use actix_web::{HttpRequest, HttpResponse, Route};
 use std::future::Future;
 use std::pin::Pin;
 use std::sync::Arc;
 
 pub type ArcRouteHandler = Arc<
-    dyn (Fn(HttpRequest) -> Pin<Box<dyn Future<Output = HttpResponse>>>) + Sync + Send + 'static,
+    dyn (Fn(HttpRequest, Payload) -> Pin<Box<dyn Future<Output = HttpResponse>>>)
+        + Sync
+        + Send
+        + 'static,
 >;
 pub struct RouteBuilder {
     uri: String,
@@ -15,7 +19,7 @@ impl RouteBuilder {
     pub fn new(
         uri: String,
         route: impl Fn() -> Route + Sync + Send + 'static,
-        handler: impl (Fn(HttpRequest) -> Pin<Box<dyn Future<Output = HttpResponse>>>)
+        handler: impl (Fn(HttpRequest, Payload) -> Pin<Box<dyn Future<Output = HttpResponse>>>)
             + Sync
             + Send
             + 'static,
@@ -37,7 +41,8 @@ impl RouteBuilder {
         let handler = self.handler.clone();
         (
             &self.uri,
-            (self.route)().to(move |request: HttpRequest| handler(request)),
+            (self.route)()
+                .to(move |request: HttpRequest, payload: Payload| handler(request, payload)),
         )
     }
 }
