@@ -61,7 +61,7 @@ impl<'a, R: ArticlesRepository + Sync + Send + 'a> ArticlesComponent
         self.repository.query_articles()
     }
     fn get_article(&self, id: u32) -> Option<Article> {
-        self.repository.query_articles_by_id(id)
+        self.repository.query_article_by_id(id)
     }
     fn modify_article(&self, article: &Article) -> bool {
         self.repository.update_article(article)
@@ -70,7 +70,7 @@ impl<'a, R: ArticlesRepository + Sync + Send + 'a> ArticlesComponent
 
 trait ArticlesRepository {
     fn query_articles(&self) -> Vec<Article>;
-    fn query_articles_by_id(&self, id: u32) -> Option<Article>;
+    fn query_article_by_id(&self, id: u32) -> Option<Article>;
     fn update_article(&self, article: &Article) -> bool;
 }
 
@@ -85,39 +85,16 @@ where
 
 use crate::schema::articles;
 use diesel::prelude::*;
-
-impl<'a, T, C> ArticlesRepository for MySQLArticlesRepository<'a, T, C>
-where
+impl<'a, T, C> ArticlesRepository for MySQLArticlesRepository<'a, T, C> where
     T: Fn() -> C + Sync + Send + 'a,
-    C: Connection<Backend = Mysql>,
-{
-    fn query_articles(&self) -> Vec<Article> {
-        let connection = (self.pool)();
-        articles::table
-            .load::<Article>(&connection)
-            .expect("Error loading articles")
-    }
-    fn query_articles_by_id(&self, id: u32) -> Option<Article> {
-        let connection = (self.pool)();
-        articles::table
-            .find(id)
-            .get_result::<Article>(&connection)
-            .ok()
-    }
-    fn update_article(&self, article: &Article) -> bool {
-        let connection = (self.pool)();
-        match diesel::update(articles::table)
-            .filter(articles::id.eq(article.id))
-            .set(article)
-            .execute(&connection)
-        {
-            Ok(1) => true,
-            Ok(0) => false,
-            Ok(n) => panic!(format!("Wrong number of updating article: {}", n)),
-            Err(msg) => panic!(format!(
-                "Error occurs while updating article: {}",
-                msg.to_string()
-            )),
+    C: Connection<Backend = Mysql> {
+        fn query_articles(&self) -> Vec<Article> {
+            query!((self.pool)(), articles, Article)
         }
-    }
+        fn query_article_by_id(&self, id: u32) -> Option<Article> {
+            query_by_id!((self.pool)(), articles, Article, id)
+        }
+        fn update_article(&self, article: &Article) -> bool {
+            update!((self.pool)(), articles, Article, article)
+        }
 }
