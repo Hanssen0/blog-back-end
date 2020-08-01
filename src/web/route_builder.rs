@@ -17,7 +17,7 @@ pub struct RouteBuilder {
 }
 impl RouteBuilder {
     pub fn new(
-        uri: String,
+        uri: &str,
         route: impl Fn() -> Route + Sync + Send + 'static,
         handler: impl (Fn(HttpRequest, Payload) -> Pin<Box<dyn Future<Output = HttpResponse>>>)
             + Sync
@@ -25,7 +25,7 @@ impl RouteBuilder {
             + 'static,
     ) -> RouteBuilder {
         RouteBuilder {
-            uri: uri,
+            uri: uri.to_string(),
             route: Box::new(route),
             handler: Arc::new(handler),
         }
